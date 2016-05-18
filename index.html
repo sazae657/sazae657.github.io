@@ -1,1 +1,48 @@
-4K
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript">
+<!-- 
+unko = function() {
+	var c = new Date((+new Date()) - (+new Date(2014, 11, 25, 22, 53, 2)));
+
+	var v = document.getElementById('sview');
+	v.innerHTML = "" + (c.getUTCFullYear() - 1970) + "年" + 
+				c.getUTCMonth() + "ヶ月" + 
+				(c.getUTCDate() - 1) + "日" + 
+				c.getUTCHours() + "時間" +
+				c.getUTCMinutes() + "分" +
+				c.getUTCSeconds() + "秒" + 
+				"ﾐｸじゃない";
+	v = null;
+
+	v = document.getElementById('tview');
+	v.innerHTML = "" + (c.getUTCFullYear() - 1970) + "年" + 
+				c.getUTCMonth() + "ヶ月" + 
+				(c.getUTCDate() - 1) + "日" + 
+				c.getUTCHours() + "時間" +
+				c.getUTCMinutes() + "分" +
+				"ﾐｸじゃない";
+
+	v = null;
+
+	v = document.getElementById('cview');
+	v.innerHTML = "" + (c.getUTCFullYear() - 1970) + "年" + 
+				c.getUTCMonth() + "ヶ月" + 
+				"ﾐｸじゃない";
+	v = null;
+}
+
+run = function() {
+	unko();
+	setInterval(unko, 1000);
+}
+
+// -->
+</script>
+</head>
+<body onload="run()">
+	<div id="cview"></div>
+	<div id="tview"></div>
+	<div id="sview"></div>
+</body>
+</html>
