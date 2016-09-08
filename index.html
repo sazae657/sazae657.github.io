@@ -1,24 +1,44 @@
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <script type="text/javascript">
-<!-- 
-unko = function() {
-	var c = new Date((+new Date()) - (+new Date(2014, 11, 25, 22, 53, 2)));
+<!--
+var formatDate = function (date, format) {
+  if (!format) format = 'YYYY-MM-DD hh:mm:ss.SSS';
+  format = format.replace(/YYYY/g, date.getFullYear());
+  format = format.replace(/MM/g, ('0' + (date.getMonth() + 1)).slice(-2));
+  format = format.replace(/DD/g, ('0' + date.getDate()).slice(-2));
+  format = format.replace(/hh/g, ('0' + date.getHours()).slice(-2));
+  format = format.replace(/mm/g, ('0' + date.getMinutes()).slice(-2));
+  format = format.replace(/ss/g, ('0' + date.getSeconds()).slice(-2));
+  if (format.match(/S/g)) {
+    var milliSeconds = ('00' + date.getMilliseconds()).slice(-3);
+    var length = format.match(/S/g).length;
+    for (var i = 0; i < length; i++) format = format.replace(/S/, milliSeconds.substring(i, i + 1));
+  }
+  return format;
+};
 
-	var v = document.getElementById('sview');
-	v.innerHTML = "" + (c.getUTCFullYear() - 1970) + "年" + 
-				c.getUTCMonth() + "ヶ月" + 
-				(c.getUTCDate() - 1) + "日" + 
+var unko = function() {
+	var c = new Date((+new Date()) - (+new Date(2014, 11, 25, 22, 53, 2)));
+	var k = new Date();
+	var v = document.getElementById('tx');
+	v.innerHTML = formatDate(new Date(), 'YYYY年MM月DD日 hh:mm:ss現在');
+	v = null;
+
+	v = document.getElementById('sview');
+	v.innerHTML = "" + (c.getUTCFullYear() - 1970) + "年" +
+				c.getUTCMonth() + "ヶ月" +
+				(c.getUTCDate() - 1) + "日" +
 				c.getUTCHours() + "時間" +
 				c.getUTCMinutes() + "分" +
-				c.getUTCSeconds() + "秒" + 
+				c.getUTCSeconds() + "秒" +
 				"ﾐｸじゃない";
 	v = null;
 
 	v = document.getElementById('tview');
-	v.innerHTML = "" + (c.getUTCFullYear() - 1970) + "年" + 
-				c.getUTCMonth() + "ヶ月" + 
-				(c.getUTCDate() - 1) + "日" + 
+	v.innerHTML = "" + (c.getUTCFullYear() - 1970) + "年" +
+				c.getUTCMonth() + "ヶ月" +
+				(c.getUTCDate() - 1) + "日" +
 				c.getUTCHours() + "時間" +
 				c.getUTCMinutes() + "分" +
 				"ﾐｸじゃない";
@@ -26,13 +46,13 @@ unko = function() {
 	v = null;
 
 	v = document.getElementById('cview');
-	v.innerHTML = "" + (c.getUTCFullYear() - 1970) + "年" + 
-				c.getUTCMonth() + "ヶ月" + 
+	v.innerHTML = "" + (c.getUTCFullYear() - 1970) + "年" +
+				c.getUTCMonth() + "ヶ月" +
 				"ﾐｸじゃない";
 	v = null;
 }
 
-run = function() {
+var run = function() {
 	unko();
 	setInterval(unko, 1000);
 }
@@ -41,6 +61,7 @@ run = function() {
 </script>
 </head>
 <body onload="run()">
+<div id="tx"></div><hr/>
 	<div id="cview"></div>
 	<div id="tview"></div>
 	<div id="sview"></div>
