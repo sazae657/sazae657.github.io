@@ -26,7 +26,19 @@ var rbenv = function(v, w) {
 	return r;
 }
 
+var visualBasic = function() {
+	var vb = navigator.vibrate ||
+					navigator.webkitVibrate ||
+					navigator.mozVibrate ||
+					navigator.msVibrate;
+	if (!vb) {
+		return;
+	}
+	navigator.vibrate(500);
+}
+
 var unko = function() {
+	visualBasic();
 	var c = new Date((+new Date()) - (+new Date(2014, 11, 25, 22, 53, 2)));
 	var k = new Date();
 	var v = document.getElementById('tx');
