@@ -32,13 +32,14 @@ var visualBasic = function() {
 					navigator.mozVibrate ||
 					navigator.msVibrate;
 	if (!vb) {
-		return;
+		return false;
 	}
-	navigator.vibrate(500);
+	navigator.vibrate(1000);
+	return true;
 }
 
 var unko = function() {
-	visualBasic();
+	var r = visualBasic();
 	var c = new Date((+new Date()) - (+new Date(2014, 11, 25, 22, 53, 2)));
 	var k = new Date();
 	var v = document.getElementById('tx');
@@ -55,7 +56,8 @@ var unko = function() {
 		rbenv(c.getUTCHours(), "時間") +
 		rbenv(c.getUTCMinutes(),  "分") +
 		rbenv(c.getUTCSeconds(), "秒") +
-		"ﾐｸじゃない";
+		"ﾐｸじゃない" +
+		(r ? " true" : "false");
 
 	v = null;
 
