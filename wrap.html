@@ -1,0 +1,73 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ቹቻቹቻ</title>
+<script type="text/javascript">
+    // <!--
+    var massage = null;
+    var cols = null;
+    var rows = null;
+    var reverse = null;
+    var render = null;
+
+    function Initialize() {
+        massage = document.getElementById('text');
+        cols = document.getElementById('cols');
+        rows = document.getElementById('rows');
+        reverse = document.getElementById('reverse');
+
+        render = document.getElementById('render');
+        Generate();
+    }
+
+    function Generate() {
+        var val = massage.value.trim();
+        var col = cols.value.trim();
+        var row = rows.value.trim();
+        if (val.length == 0 || col.length == 0 || row.length == 0) {
+            render.innerText = '';
+            return;
+        }
+        col = parseInt(col);
+        var arr = Array.from(val);
+        row = parseInt(row);
+        var rev = reverse.checked;
+        var res = '';
+        row = arr.length * row;
+        for (var x = 0; x < row; ++x) {
+            for (var k = 0; k < col; ++k) {
+                res += arr.join("");
+            }
+            var w = rev ? arr.concat() : null;
+            res += "\n";
+            var t = rev ? arr[arr.length-1] : arr[0];
+            var m = rev ? arr.length: arr.length;
+            for (var y = 1; y < m; ++y) {
+                arr[rev ? y : y - 1] = rev ? w[y-1] : arr[y];
+            }
+            arr[rev ? 0 : arr.length-1] = t;
+        }
+        render.innerText = res;
+    }
+    // -->
+</script>
+</head>
+<body onload="Initialize()">
+    <label for="hoge">文字列</label>
+    <input type="text" id="text" value="異界型雪ﾐｸ -豆の味-" oninput="Generate()">
+    <br/>
+    <label for="cols">横繰り返し数</label>
+    <input type="number" value="2" id="cols" oninput="Generate()">
+    <br/>
+    <label for="rows">縦繰り返し数</label>
+    <input type="number" value="2" id="rows" oninput="Generate()">
+    <br/>
+    <label for="reverse">逆転</label>
+    <input type="checkbox" value="逆転" id="reverse" onclick="Generate()">
+    <hr/>
+    <pre id="render">
+    </pre>
+
+</body>
+</html>
