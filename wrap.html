@@ -2,6 +2,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script type="text/javascript" src="jabasukuriputo.js"></script>
 <title>ቹቻቹቻ</title>
 <script type="text/javascript">
     // <!--
@@ -9,14 +10,18 @@
     var cols = null;
     var rows = null;
     var reverse = null;
+    var doubler = null;
+    var anim = null;
     var render = null;
+    var queue = null;
 
     function Initialize() {
         massage = document.getElementById('text');
         cols = document.getElementById('cols');
         rows = document.getElementById('rows');
         reverse = document.getElementById('reverse');
-
+        doubler = document.getElementById('doubler');
+        anim = document.getElementById('anim');
         render = document.getElementById('render');
         Generate();
     }
@@ -29,12 +34,26 @@
             render.innerText = '';
             return;
         }
+        var double = doubler.checked;
+
         col = parseInt(col);
         var arr = Array.from(val);
         row = parseInt(row);
         var rev = reverse.checked;
-        var res = '';
         row = arr.length * row;
+        var res = Render(arr, rev, row, col);
+        if(double) {
+            res += Render(arr, !rev, row, col);
+        }
+        render.innerText = res;
+        if (animRunning) {
+            UpdateAnimSetting();
+        }
+    }
+
+
+    function Render(arr, rev, row, col) {
+        var res = '';
         for (var x = 0; x < row; ++x) {
             for (var k = 0; k < col; ++k) {
                 res += arr.join("");
@@ -48,8 +67,106 @@
             }
             arr[rev ? 0 : arr.length-1] = t;
         }
-        render.innerText = res;
+        return res;
     }
+
+    function RenderSingle(arr, rev) {
+        var w = rev ? arr.concat() : null;
+        var t = rev ? arr[arr.length-1] : arr[0];
+        var m = rev ? arr.length: arr.length;
+        for (var y = 1; y < m; ++y) {
+            arr[rev ? y : y - 1] = rev ? w[y-1] : arr[y];
+        }
+        arr[rev ? 0 : arr.length-1] = t;
+        return arr;
+    }
+
+    var animRunning = false;
+    var lastArr = null;
+    var curRevState = false;
+    var curRows = 0;
+    var curCols = 0;
+    var curTotalRows = 0;
+    var curRenderLine = 0;
+    var curDoubler = false;
+
+    function ToggleAnim() {
+        if(animRunning) {
+            animRunning = false;
+            return;
+        }
+        if (queue == null) {
+            queue = new Queue();
+        }
+        if (!UpdateAnimSetting()) {
+            return;
+        }
+        animRunning = true;
+        //AnimProc();
+        setTimeout(AnimProc, 100);
+    }
+
+    function UpdateAnimSetting() {
+        var val = massage.value.trim();
+        var col = cols.value.trim();
+        var row = rows.value.trim();
+        if (val.length == 0 || col.length == 0 || row.length == 0) {
+            render.innerText = '';
+            return false;
+        }
+
+        lastArr = Array.from(val);
+
+        curCols = parseInt(col);
+        curRows = parseInt(row);
+        curRevState = reverse.checked;
+        curTotalRows = lastArr.length * row;
+        curDoubler = doubler.checked;
+        return true;
+    }
+
+    function AnimProc() {
+        var lme = curDoubler ? (curTotalRows*2) : curTotalRows;
+        if (queue.Count() < lme) {
+            for(var k = queue.Count(); k < lme; ++k) {
+                if (k == curTotalRows) {
+                    curRevState = !curRevState;
+                }
+                lastArr = RenderSingle(lastArr, curRevState);
+                var res = '';
+                for (var y = 0; y < curCols; ++y) {
+                    res += lastArr.join("");
+                }
+                queue.Enqueue(res);
+                curRenderLine++;
+            }
+        }
+        else {
+            lastArr = RenderSingle(lastArr, curRevState);
+            var res = '';
+            for (var k = 0; k < curCols; ++k) {
+                res += lastArr.join("");
+            }
+            curRenderLine++;
+            queue.Enqueue(res);
+        }
+
+        if (curRenderLine > lme) {
+            if (curDoubler) {
+                curRevState = !curRevState;
+            }
+            curRenderLine = 0;
+        }
+
+        if(queue.Count() > lme) {
+            queue.Dequeue();
+        }
+        render.innerText = queue.ToString();
+        if (animRunning) {
+            setTimeout(AnimProc, 100);
+        }
+    }
+
     // -->
 </script>
 </head>
@@ -65,6 +182,11 @@
     <br/>
     <label for="reverse">逆転</label>
     <input type="checkbox" value="逆転" id="reverse" onclick="Generate()">
+    <label for="doubler">ﾀﾞﾌﾞﾙ</label>
+    <input type="checkbox" value="ﾀﾞﾌﾞﾙ" id="doubler" onclick="Generate()">
+    <br/>
+    <label for="anim">ｱﾆﾑ</label>
+    <input type="checkbox" value="ｱﾆﾑ" id="anim" onclick="ToggleAnim()">
     <hr/>
     <pre id="render">
     </pre>
