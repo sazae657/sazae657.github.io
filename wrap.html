@@ -14,6 +14,7 @@
     var anim = null;
     var render = null;
     var queue = null;
+    var intervalq = null;
 
     function Initialize() {
         massage = document.getElementById('text');
@@ -22,6 +23,8 @@
         reverse = document.getElementById('reverse');
         doubler = document.getElementById('doubler');
         anim = document.getElementById('anim');
+        intervalq = document.getElementById('interval');
+
         render = document.getElementById('render');
         Generate();
     }
@@ -89,6 +92,7 @@
     var curTotalRows = 0;
     var curRenderLine = 0;
     var curDoubler = false;
+    var curInterval = 50;
 
     function ToggleAnim() {
         if(animRunning) {
@@ -103,14 +107,15 @@
         }
         animRunning = true;
         //AnimProc();
-        setTimeout(AnimProc, 100);
+        setTimeout(AnimProc, curInterval);
     }
 
     function UpdateAnimSetting() {
         var val = massage.value.trim();
         var col = cols.value.trim();
         var row = rows.value.trim();
-        if (val.length == 0 || col.length == 0 || row.length == 0) {
+        var rq = intervalq.value.trim();
+        if (val.length == 0 || col.length == 0 || row.length == 0 || rq.length == 0) {
             render.innerText = '';
             return false;
         }
@@ -122,6 +127,7 @@
         curRevState = reverse.checked;
         curTotalRows = lastArr.length * row;
         curDoubler = doubler.checked;
+        curInterval = parseInt(rq);
         return true;
     }
 
@@ -163,7 +169,7 @@
         }
         render.innerText = queue.ToString();
         if (animRunning) {
-            setTimeout(AnimProc, 100);
+            setTimeout(AnimProc, curInterval);
         }
     }
 
@@ -187,6 +193,8 @@
     <br/>
     <label for="anim">ｱﾆﾑ</label>
     <input type="checkbox" value="ｱﾆﾑ" id="anim" onclick="ToggleAnim()">
+    <label for="interval">速度(ms)</label>
+    <input type="number" value="50" id="interval" oninput="UpdateAnimSetting()">
     <hr/>
     <pre id="render">
     </pre>
