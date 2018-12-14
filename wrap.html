@@ -44,14 +44,18 @@
         row = parseInt(row);
         var rev = reverse.checked;
         row = arr.length * row;
+
+        if (animRunning) {
+            queue = new Queue();
+            UpdateAnimSetting();
+            return;
+        }
+
         var res = Render(arr, rev, row, col);
         if(double) {
             res += Render(arr, !rev, row, col);
         }
         render.innerText = res;
-        if (animRunning) {
-            UpdateAnimSetting();
-        }
     }
 
 
@@ -135,7 +139,7 @@
         var lme = curDoubler ? (curTotalRows*2) : curTotalRows;
         if (queue.Count() < lme) {
             for(var k = queue.Count(); k < lme; ++k) {
-                if (k == curTotalRows) {
+                if (k == lastArr.length && curDoubler) {
                     curRevState = !curRevState;
                 }
                 lastArr = RenderSingle(lastArr, curRevState);
@@ -157,7 +161,7 @@
             queue.Enqueue(res);
         }
 
-        if (curRenderLine > lme) {
+        if (curRenderLine > lastArr.length) {
             if (curDoubler) {
                 curRevState = !curRevState;
             }
