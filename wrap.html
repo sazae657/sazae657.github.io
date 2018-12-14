@@ -46,6 +46,7 @@
         row = arr.length * row;
 
         if (animRunning) {
+            lastArr = arr;
             queue = new Queue();
             UpdateAnimSetting();
             return;
